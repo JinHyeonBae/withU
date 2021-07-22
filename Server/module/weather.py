@@ -1,13 +1,16 @@
 import requests
 from bs4 import BeautifulSoup as bs
 
-def crolling(address):
-    html = requests.get(
-    'https://search.naver.com/search.naver?sm=top_hty&fbm=0&ie=utf8&query='+address+' 날씨'
-    )
+def crawling(address):
+    html = requests.get('https://search.naver.com/search.naver?sm=top_hty&fbm=0&ie=utf8&query='+address+' 날씨')
 
     #html를 text로 변환 요청
     soup = bs(html.text, 'html.parser')
-    tmr_morning = soup.select('.morning_box > .info_temperature > .todaytemp ')
-    tmr_info = soup.find_all('p', 'cast_txt')
-    tmr_indicator = soup.select('.detail_box > .indicator > span')
+    data1 = soup.find('div', {'class' : 'weather_box'})
+    find_address = data1.find('span', {'class':'btn_select'}).text
+    print('현재 위치: '+find_address)
+
+    find_currenttemp = data1.find('span',{'class': 'todaytemp'}).text
+    print('현재 온도: '+find_currenttemp+'℃')
+
+    
