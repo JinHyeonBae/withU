@@ -1,20 +1,23 @@
+from google.auth import credentials
 from google.cloud import dialogflow
 
 from ..key.flowKey import readKeyfile
+from google.oauth2 import service_account
 
 import uuid
 import os
 
 sessionId = uuid.uuid4()
+SERVICE_ACCOUNT_FILE = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 def connect(req) :
 
-    pj_id = readKeyfile()
-    
-    
-    session_client = dialogflow.SessionsClient.from_service_account_json(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
-    print(type(pj_id))
-    session = session_client.session_path(pj_id, sessionId)
+    credential = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+
+    data = readKeyfile()
+
+    session_client = dialogflow.SessionsClient(credentials=credential)
+    session = session_client.session_path(data, sessionId)
     print("session path :{}\n".format(session))
 
     query_input ={
@@ -23,10 +26,17 @@ def connect(req) :
             "language_code" : "ko"
         }
     }
+
     
     queryRequest = dialogflow.DetectIntentRequest(
-        session = 'projects/"withu-tyos"/agent/sessions/0ec6f4b8-5ca9-4fd6-b6b5-bf2d31dc3d53',
-        query_input = query_input
+        session = session,
+        query_input = query_input,
     )
     print("queryRequest: ",queryRequest)
-    response = session_client.detect_intent(request=queryRequest)
+
+    try: 
+        response = session_client.detect_intent(request=queryRequest)
+        print(response)
+    except Exception as e:
+        s = str(e)
+        print(s)
