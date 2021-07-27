@@ -3,19 +3,18 @@ from flask import Blueprint,request,make_response, jsonify
 from flask.templating import render_template
 from urllib.parse import urlencode
 
-from ..module.analyzeSentence import analyzeSentence as analyze
-from ..module.dialogflow import connect
+from ..controller import controller
+from ..model.findData import findData
 
 import urllib3
 import requests
 import json
 
 from werkzeug.datastructures import Headers
-
+from flask_pymongo import PyMongo
 
 
 bp = Blueprint('main' ,__name__, url_prefix='/')
-
 
 @bp.route('/')
 def index():
@@ -25,7 +24,13 @@ def index():
 def webhookProcess():
     req = request.form['content'] # data
 
-    sentence = analyze(req)
-    dia = connect(req)
+    procession = controller.controller()
+    emotion = findData()
+    
+    sentence = procession.analyze(req)
+    emo = emotion.emotion(req)
+    print("emotion :",emo)
+    
+    procession.crawling('부산 남구')
 
     return render_template('result.html', res=sentence)

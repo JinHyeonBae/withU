@@ -3,16 +3,7 @@ from flask.templating import render_template
 import pymongo
 from werkzeug.utils import redirect
 
-import json
-import os
-import uuid
-import requests
-import sys
 
-
-from .module.analyzeSentence import analyzeSentence as analyze
-from .module.weather import crawling
-from .module.judgeEmotion import judgeEmotion
 from .views import main_views
 
 def create_app():
