@@ -1,31 +1,49 @@
-import React, {useState,useEffect}  from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
-import ProgressCircle from 'react-native-progress-circle';
-import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import ProgressCircle from "react-native-progress-circle";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomePage() {
-  // 임시 데이터 
-  let riskPercent = 25;
+  // 임시 데이터
+  let riskState = "경고"; // 0: 양호, 1: 경고, 2: 위험
   let temperature = 25;
   let humidity = 10;
   let dust = 30;
-  let activity = '양호';
-  let robotUseFrequency = '양호';
+  let activity = "양호";
+  let robotUseFrequency = "양호";
+  let riskColor = "";
+
+  switch (riskState) {
+    case "양호":
+      riskColor = "#70AD47";
+      break;
+    case "경고":
+      riskColor = "#ffcc00";
+      break;
+    case "위험":
+      riskColor = "#ec1c24";
+      break;
+  }
 
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="black" />
       <View style={styles.riskContainer}>
         <ProgressCircle
-          percent={riskPercent}
+          percent={100}
           radius={130}
-          borderWidth={40}
-          color="#70AD47"
-          shadowColor="#D3D3D3"
-          bgColor="#fff"
-        > 
-          <Text style={styles.riskText}>위험도</Text>
-          <Text style={styles.riskPercentText}>{riskPercent + '%'}</Text>
+          borderWidth={30}
+          color={riskColor}
+          bgColor="#fff">
+          <Text style={styles.riskText}>사용자 상태</Text>
+          <Text style={styles.riskStateText}>{riskState}</Text>
         </ProgressCircle>
       </View>
 
@@ -33,15 +51,15 @@ export default function HomePage() {
         <View style>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>온도</Text>
-            <Text style={styles.sensorResult}>{temperature + '°C'} </Text>
+            <Text style={styles.sensorResult}>{temperature + "°C"} </Text>
           </View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>습도</Text>
-            <Text style={styles.sensorResult}>{humidity + '%'} </Text>
+            <Text style={styles.sensorResult}>{humidity + "%"} </Text>
           </View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>먼지</Text>
-            <Text style={styles.sensorResult}>{dust + '%'} </Text>
+            <Text style={styles.sensorResult}>{dust + "%"} </Text>
           </View>
         </View>
 
@@ -57,55 +75,53 @@ export default function HomePage() {
         </View>
       </View>
     </ScrollView>
-  )
-
+  );
 }
 
 const styles = StyleSheet.create({
-  container:{
-    backgroundColor:"#fff",
-    padding:10
+  container: {
+    backgroundColor: "#fff",
+    padding: 10,
   },
-  riskContainer:{
+  riskContainer: {
     paddingTop: 30,
     paddingBottom: 40,
     borderColor: "#D3D3D3",
     borderBottomWidth: 1,
-    alignItems:"center",
-    justifyContent:"center"
+    alignItems: "center",
+    justifyContent: "center",
   },
-  sensorContainer:{
-    flexDirection:"row",
-    padding:10,
+  sensorContainer: {
+    flexDirection: "row",
+    padding: 10,
     paddingTop: 30,
     alignSelf: "center",
     width: "90%",
   },
-  sensorTitle:{
-    color:"#696969",
-    fontSize:15,
-    fontWeight:"400"
+  sensorTitle: {
+    color: "#696969",
+    fontSize: 15,
+    fontWeight: "400",
   },
-  sensorResult:{
-    color:"#000",
-    fontSize:20,
-    fontWeight:"400"
+  sensorResult: {
+    color: "#000",
+    fontSize: 20,
+    fontWeight: "400",
   },
-  riskText:{
-    fontSize:30,
-    fontWeight:"500",
-    marginTop:7
+  riskStateText: {
+    fontSize: 30,
+    fontWeight: "600",
+    marginTop: 10,
   },
-  riskPercentText:{
-    fontSize:20,
-    marginTop:7
+  riskText: {
+    fontSize: 20,
+    marginTop: 7,
   },
-  sensorInfo:{
-    borderBottomWidth:1,
-    borderColor:"#696969",
+  sensorInfo: {
+    borderBottomWidth: 1,
+    borderColor: "#696969",
     width: 150,
-    height:70,
-    justifyContent:"center",
+    height: 70,
+    justifyContent: "center",
   },
-
-})
+});
