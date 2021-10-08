@@ -7,11 +7,22 @@ import {
   ScrollView,
   Alert,
   SafeAreaView,
+  TouchableHighlight,
+  Animated,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Audio } from "expo-av";
+import { SwipeListView } from "react-native-swipe-list-view";
+import VoiceMsgList from "../../components/VoiceMsgList";
 
-export default function RecodePage({ navigation }) {
+// const rowSwipeAnimatedValues = {};
+// Array(5)
+//   .fill("")
+//   .forEach((_, i) => {
+//     rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
+//   });
+
+export default function VoiceMsgPage({ navigation }) {
   useEffect(() => {
     navigation.setOptions(
       {
@@ -21,6 +32,7 @@ export default function RecodePage({ navigation }) {
     );
   });
 
+  // 재생
   const [sound, setSound] = React.useState();
 
   async function playSound() {
@@ -61,14 +73,61 @@ export default function RecodePage({ navigation }) {
     const uri = recording.getURI();
   }
 
+  // swipe test
+  const [listData, setListData] = useState(
+    Array(5)
+      .fill("")
+      .map((_, i) => ({ key: `${i}`, text: `${i}` }))
+  );
+
+  // const closeRow = (rowMap, rowKey) => {
+  //   if (rowMap[rowKey]) {
+  //     rowMap[rowKey].closeRow();
+  //   }
+  // };
+
+  // const deleteRow = (rowMap, rowKey) => {
+  //   closeRow(rowMap, rowKey);
+  //   const newData = [...listData];
+  //   const prevIndex = listData.findIndex((item) => item.key === rowKey);
+  //   newData.splice(prevIndex, 1);
+  //   setListData(newData);
+  // };
+
+  // const renderItem = (data) => (
+  //   <TouchableHighlight
+  //     onPress={() => console.log("You touched me")}
+  //     style={styles.rowFront}
+  //     underlayColor="#EEEEEE">
+  //     <View>
+  //       <Text>음성 메시지 {data.item.text}</Text>
+  //     </View>
+  //   </TouchableHighlight>
+  // );
+
+  // const renderHiddenItem = (data, rowMap) => (
+  //   <View style={styles.rowBack}>
+  //     <TouchableOpacity
+  //       style={styles.backDeleteButton}
+  //       onPress={() => deleteRow(rowMap, data.item.key)}>
+  //       <Icon name="trash" color="#fff" size="30" />
+  //     </TouchableOpacity>
+  //   </View>
+  // );
+
+  const voiceMsgData = [
+    { msgTitle: "음성 메세지 1" },
+    { msgTitle: "음성 메세지 2" },
+    { msgTitle: "음성 메세지 3" },
+  ];
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.listContainer}>
         <ScrollView>
-          <View style={styles.messegeContainer}>
-            <Text>음성 메세지</Text>
-            <Text></Text>
-          </View>
+          {voiceMsgData.map((content, i) => {
+            return <VoiceMsgList content={content} key={i} />;
+          })}
         </ScrollView>
       </View>
       <View style={styles.recodeContainer}>
@@ -81,23 +140,7 @@ export default function RecodePage({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
-
-    /*
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.micContainer}>
-        <Icon
-          name="mic-outline"
-          color="#4D4D4D"
-          size="100"
-          onPress={() => alert("녹음 중")}
-        />
-      </TouchableOpacity>
-      <Text style={styles.micInfo}>마이크 버튼을 누른 후</Text>
-      <Text style={styles.micInfo}>사용자에게 전달할 말을 녹음해주세요</Text>
-      <Text style={styles.micInfo}> </Text>
     </View>
-    */
   );
 }
 
@@ -115,28 +158,29 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     backgroundColor: "#f1f1f1",
   },
-  messegeContainer: {
+  rowFront: {
+    justifyContent: "center",
+    backgroundColor: "#fff",
     borderBottomWidth: 0.7,
     borderColor: "#D3D3D3",
     paddingVertical: 15,
     paddingHorizontal: 5,
-    height: 60,
-    justifyContent: "center",
+    height: 70,
   },
-  /*
-  container: {
-    backgroundColor: "#fff",
+  rowBack: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 10,
+    borderBottomWidth: 0.7,
+    borderColor: "#D3D3D3",
+    height: 70,
   },
 
-  micButton: {},
-  micInfo: {
+  backDeleteButton: {
     alignItems: "center",
-    fontSize: 15,
-    marginBottom: 5,
+    justifyContent: "center",
+    position: "absolute",
+    width: 80,
+    height: "100%",
+    backgroundColor: "#FF3300",
+    right: 0,
   },
-  */
 });

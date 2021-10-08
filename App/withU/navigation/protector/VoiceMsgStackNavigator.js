@@ -1,12 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import RecodePage from "../../pages/protector/RecodePage";
+import VoiceMsgPage from "../../pages/protector/VoiceMsgPage";
 
-const RecodeStack = createStackNavigator();
+const VoiceMsgStack = createStackNavigator();
 
-const RecodeStackNavigator = () => {
+const VoiceMsgStackNavigator = () => {
   return (
-    <RecodeStack.Navigator
+    <VoiceMsgStack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: "#70AD47",
@@ -16,9 +16,9 @@ const RecodeStackNavigator = () => {
         headerTintColor: "#FFFFFF",
         headerBackTitleVisible: false,
       }}>
-      <RecodeStack.Screen name="RecodePage" component={RecodePage} />
-    </RecodeStack.Navigator>
+      <VoiceMsgStack.Screen name="VoiceMsgPage" component={VoiceMsgPage} />
+    </VoiceMsgStack.Navigator>
   );
 };
 
-export default RecodeStackNavigator;
+export default VoiceMsgStackNavigator;
