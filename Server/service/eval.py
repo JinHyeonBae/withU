@@ -15,7 +15,10 @@ import torch.nn.functional as F
 import pickle
 import sys
 import traceback
-sys.path.append("C:/Users/BJH/Desktop/21_withU/Server/service")
+sys.path.append('/home/jetson/Desktop')
+
+from Server.service.Decoder import AttnDecoderRNN
+from Server.service.Encoder import EncoderRNN
 
 use_cuda = torch.cuda.is_available()
 
@@ -26,73 +29,8 @@ SOS_token = 0
 EOS_token = 1
 UNKNOWN_token = 2
 
-class EncoderRNN(nn.Module):
-    def __init__(self, input_size, hidden_size):
-        super(EncoderRNN, self).__init__()
-        self.hidden_size = hidden_size
-        
-        self.embedding = nn.Embedding(input_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size)
-        
-    def forward(self, input, hidden):
-        embedded = self.embedding(input).view(1, 1, -1)
-        output = embedded
-        output, hidden = self.gru(output, hidden)
-        return output, hidden
-    
-    def initHidden(self):
-        result = Variable(torch.zeros(1,1, self.hidden_size))
-        if use_cuda:
-            return result.cuda()
-        else:
-            return result
 
-class AttnDecoderRNN(nn.Module):
-    def __init__(self, hidden_size, output_size, dropout_p = 0.1, max_length=MAX_LENGTH):
-        super(AttnDecoderRNN, self).__init__()
-        self.hidden_size = hidden_size
-        self.output_size = output_size
-        self.dropout_p = dropout_p
-        self.max_length = max_length
-        
-        self.embedding = nn.Embedding(self.output_size, self.hidden_size)
-        self.attn = nn.Linear(self.hidden_size * 2 , self.max_length)
-        self.attn_combine = nn.Linear(self.hidden_size*2, self.hidden_size)
-        self.dropout = nn.Dropout(self.dropout_p)
-        self.gru = nn.GRU(self.hidden_size, self.hidden_size)
-        self.out = nn.Linear(self.hidden_size, self.output_size)
-        
-    def forward(self, input, hidden, encoder_outputs):
-        embedded = self.embedding(input).view(1,1,-1)
-        print("embedded shape : ",embedded.shape)
-        embedded = self.dropout(embedded)
-     
-        attn_weights = F.softmax(self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)
-        
-        print("hiddne :",self.hidden_size) 
-        print(" :",self.hidden_size) 
 
-        print(list(attn_weights.unsqueeze(0).size())) # [1,50]
-        print(list(encoder_outputs.unsqueeze(0).size())) # [100, 256]
-
-        attn_applied = torch.bmm(attn_weights.unsqueeze(0), encoder_outputs.unsqueeze(0))
-        # ([1,1,50], [1,100,256])
-
-        output = torch.cat((embedded[0], attn_applied[0]), 1)
-        output = self.attn_combine(output).unsqueeze(0)
-        
-        output = F.relu(output)
-        output, hidden = self.gru(output, hidden)
-        
-        output = F.log_softmax(self.out(output[0]))
-        return output, hidden, attn_weights
-    
-    def initHidden(self):
-        result = Variable(torch.zeros(1,1,self.hidden_size))
-        if use_cuda:
-            return result.cuda()
-        else:
-            return result
 
 class Lang :
     def __init__(self, name):
@@ -125,6 +63,9 @@ class evaluation:
     def __init__(self):
         self.input_lang = Lang('input')
         self.output_lang = Lang('output')
+        self.encoder = torch.load('/home/jetson/Desktop/Server/service/data/no_tokenizer_50000_en.pt')
+        self.decoder = torch.load('/home/jetson/Desktop/Server/service/data/no_tokenizer_50000_de.pt')
+
 
     def read(self):
         with open ('/home/jetson/Desktop/Server/service/data/encoder.pickle', 'rb') as fw:
@@ -138,7 +79,6 @@ class evaluation:
 
 
     def variableFromSentence(self, lang, sentence):
-        print(type(lang))
         indexes = self.indexesFromSentence(lang, sentence)
         indexes.append(EOS_token)
         print(indexes)
@@ -187,24 +127,20 @@ class evaluation:
         return decoded_words, decoder_attentions[:di +1]
 
 
-    def evaluated(self, encoder, decoder, inp):
+    def evaluated(self, inp):
         for i in range(1):
-            output_words, attentions = self.evaluate(encoder, decoder , inp)
+            output_words, attentions = self.evaluate(self.encoder, self.decoder , inp)
             output_sentence = ' '.join(output_words)
             print('<', output_sentence)
             print('')
 
-if __name__ == '__main__':
-    try:
-        encoder = torch.load('../data/no_tokenizer_50000_en.pt')
-        decoder = torch.load('../data/no_tokenizer_50000_de.pt')
+# if __name__ == '__main__':
+#     try:
 
-        eval = evaluation()
-        eval.read()
-        inp = "초조해"
-        eval.evaluated(encoder, decoder, inp)
+#         inp = "초조해"
+#         eval.evaluated(inp)
         
-    except Exception as e :
-        print("e :", e.args)
-        print("error name:",type(e).__name__)
-        print(traceback.format_exc())
+#     except Exception as e :
+#         print("e :", e.args)
+#         print("error name:",type(e).__name__)
+#         print(traceback.format_exc())
