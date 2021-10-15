@@ -1,19 +1,20 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import UserTabNavigator from "./navigation/user/UserTabNavigator";
 import { StatusBar } from "expo-status-bar";
 import { createStackNavigator } from "@react-navigation/stack";
+import UserTabNavigator from "./navigation/user/UserTabNavigator";
+import ProtectorTabNavigator from "./navigation/protector/ProtectorTabNavigator";
 import LoginOptionPage from "./pages/login/LoginOptionPage";
 import LoginPage from "./pages/login/LoginPage";
-import ProtectorTabNavigator from "./navigation/protector/ProtectorTabNavigator";
-import SwipeValueBasedUi from "./pages/SwipeValueBasedUi";
+import UserJoinPage from "./pages/login/UserJoinPage";
+import ProtectorJoinPage from "./pages/login/ProtectorJoinPage";
+
 const Login = createStackNavigator();
 
 export default function App() {
   console.disableYellowBox = true;
 
   return (
-    //<SwipeValueBasedUi />
     <NavigationContainer>
       <StatusBar style="#black" />
       <Login.Navigator
@@ -26,6 +27,8 @@ export default function App() {
         <Login.Screen name="ProtectorLoginPage" component={LoginPage} />
         <Login.Screen name="UserMode" component={UserTabNavigator} />
         <Login.Screen name="ProtectorMode" component={ProtectorTabNavigator} />
+        <Login.Screen name="UserJoinPage" component={UserJoinPage} />
+        <Login.Screen name="ProtectorJoinPage" component={ProtectorJoinPage} />
       </Login.Navigator>
     </NavigationContainer>
   );
