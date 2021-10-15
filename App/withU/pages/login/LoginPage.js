@@ -5,6 +5,45 @@ import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput } from 'rea
 export default function LoginPage({ navigation, route }) {
 
   const title = (route.params.mode === 'User') ? '사용자' : '보호자';
+  
+  const [loginForm, setLoginForm] = useState({
+    userId  : '',
+    userPw : '',
+    userType : route.params.mode
+  })
+  const [registerState, setRegisterState] = useState({
+    message : ""
+  })
+
+
+
+  const submit = ()=>{
+    console.log("submit")
+    //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
+    // https 시 network request failed
+    const url = 'http://3.36.136.26:4000/login'
+
+    const result = fetch(url,{
+        method : 'POST',
+        body : JSON.stringify(loginForm),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+    })
+    
+    result
+    .then((res)=> res.json())
+    .then((res)=>{
+      console.log("서버로부터의 답변 :", res.message)
+      setRegisterState(res.message)
+    })
+    .catch((error)=>{
+      console.log(error)
+      console.log ( '페치 작업에 문제가 발생했습니다, POST : ' + error.message );
+     throw error;
+    })
+  }
+  
 
   return (
     <View style={styles.container}>
@@ -12,18 +51,21 @@ export default function LoginPage({ navigation, route }) {
       <TextInput
         style={styles.loginContainer}
         placeholder="ID"
+        onChangeText={(text) => {setLoginForm({...loginForm, userId : text})}}
       />
       <TextInput
         style={styles.loginContainer}
         placeholder = "password"
         secureTextEntry = {true}
+        onChangeText={(text) => {setLoginForm({...loginForm, userPw : text})}}
       />
-      <TouchableOpacity style={styles.loginButton} onPress={() => {navigation.reset({routes: [{name: route.params.mode + 'Mode'}]})}}>
+      <TouchableOpacity style={styles.loginButton} 
+        onPress={() => {  submit();}}>
         <Text style={{color: '#fff', fontSize: 18, fontWeight: '700'}}>로그인</Text>
       </TouchableOpacity>
         
-
-      <TouchableOpacity style={{marginTop: 15}} onPress={() => {navigation.navigate('JoinPage')}}>
+      {/*onPress={() => {navigation.navigate('JoinPage')}*/}
+      <TouchableOpacity style={{marginTop: 15}}>
           <Text style={{color: '#385723', fontSize: 16, fontWeight: '600'}}>회원가입</Text>
       </TouchableOpacity>
     </View>
