@@ -15,7 +15,6 @@ export default function HomePage() {
   let riskState = "경고"; // 0: 양호, 1: 경고, 2: 위험
   let temperature = 25;
   let humidity = 10;
-  let dust = 30;
   let activity = "양호";
   let robotUseFrequency = "양호";
   let riskColor = "";
@@ -57,10 +56,6 @@ export default function HomePage() {
             <Text style={styles.sensorTitle}>습도</Text>
             <Text style={styles.sensorResult}>{humidity + "%"} </Text>
           </View>
-          <View style={styles.sensorInfo}>
-            <Text style={styles.sensorTitle}>먼지</Text>
-            <Text style={styles.sensorResult}>{dust + "%"} </Text>
-          </View>
         </View>
 
         <View>
@@ -85,7 +80,7 @@ const styles = StyleSheet.create({
   },
   riskContainer: {
     paddingTop: 30,
-    paddingBottom: 40,
+    paddingBottom: 50,
     borderColor: "#D3D3D3",
     borderBottomWidth: 1,
     alignItems: "center",
@@ -93,8 +88,7 @@ const styles = StyleSheet.create({
   },
   sensorContainer: {
     flexDirection: "row",
-    padding: 10,
-    paddingTop: 30,
+    paddingTop: 40,
     alignSelf: "center",
     width: "90%",
   },
@@ -102,6 +96,7 @@ const styles = StyleSheet.create({
     color: "#696969",
     fontSize: 15,
     fontWeight: "400",
+    marginVertical: 5,
   },
   sensorResult: {
     color: "#000",
@@ -123,5 +118,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 70,
     justifyContent: "center",
+    marginHorizontal: 5,
   },
 });

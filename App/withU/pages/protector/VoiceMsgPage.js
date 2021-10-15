@@ -13,7 +13,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { Audio } from "expo-av";
 import { SwipeListView } from "react-native-swipe-list-view";
-import VoiceMsgList from "../../components/VoiceMsgList";
+import VoiceMsgList from "../../components/VoidcMsgList";
 
 // const rowSwipeAnimatedValues = {};
 // Array(5)
@@ -73,48 +73,7 @@ export default function VoiceMsgPage({ navigation }) {
     const uri = recording.getURI();
   }
 
-  // swipe test
-  const [listData, setListData] = useState(
-    Array(5)
-      .fill("")
-      .map((_, i) => ({ key: `${i}`, text: `${i}` }))
-  );
-
-  // const closeRow = (rowMap, rowKey) => {
-  //   if (rowMap[rowKey]) {
-  //     rowMap[rowKey].closeRow();
-  //   }
-  // };
-
-  // const deleteRow = (rowMap, rowKey) => {
-  //   closeRow(rowMap, rowKey);
-  //   const newData = [...listData];
-  //   const prevIndex = listData.findIndex((item) => item.key === rowKey);
-  //   newData.splice(prevIndex, 1);
-  //   setListData(newData);
-  // };
-
-  // const renderItem = (data) => (
-  //   <TouchableHighlight
-  //     onPress={() => console.log("You touched me")}
-  //     style={styles.rowFront}
-  //     underlayColor="#EEEEEE">
-  //     <View>
-  //       <Text>음성 메시지 {data.item.text}</Text>
-  //     </View>
-  //   </TouchableHighlight>
-  // );
-
-  // const renderHiddenItem = (data, rowMap) => (
-  //   <View style={styles.rowBack}>
-  //     <TouchableOpacity
-  //       style={styles.backDeleteButton}
-  //       onPress={() => deleteRow(rowMap, data.item.key)}>
-  //       <Icon name="trash" color="#fff" size="30" />
-  //     </TouchableOpacity>
-  //   </View>
-  // );
-
+  // 임시 데이터
   const voiceMsgData = [
     { msgTitle: "음성 메세지 1" },
     { msgTitle: "음성 메세지 2" },

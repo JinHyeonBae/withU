@@ -5,7 +5,7 @@ import {
 } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 import HomeStackNavigator from "../HomeStackNavigator";
-import VoiceMsgPageStackNavigator from "./VoiceMsgPageStackNavigator";
+import VoiceMsgStackNavigator from "./VoiceMsgStackNavigator";
 import ProtectorInfoStackNavigator from "./ProtectorInfoStackNavigator";
 
 const ProtectorTab = createBottomTabNavigator();
@@ -36,7 +36,7 @@ const ProtectorTabNavigator = () => {
       <ProtectorTab.Screen name="홈" component={HomeStackNavigator} />
       <ProtectorTab.Screen
         name="말동무"
-        component={VoiceMsgPageStackNavigator}
+        component={VoiceMsgStackNavigator}
       />
       <ProtectorTab.Screen
         name="내정보"
