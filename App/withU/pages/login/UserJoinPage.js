@@ -31,8 +31,10 @@ export default function UserJoinPage({ navigation, route }) {
   const [registerState, setRegisterState] = useState({
     message: "",
   });
-  const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false); // 회원 가입 성공 여부
+  const [isJoinSuccess, setIsJoinSuccess] = useState(false); // 회원 가입 성공 여부
 
+  // 로그인 오류 메시지 출력
+  const [errortext, setErrortext] = useState(null);
   const submit = () => {
     console.log("submit");
     //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
@@ -52,9 +54,11 @@ export default function UserJoinPage({ navigation, route }) {
       .then((res) => {
         console.log("서버로부터의 답변 :", res.message);
         setRegisterState(res.message);
-        if (res.status === "200") {
-          setIsRegistraionSuccess(true);
+        if (res.status === 200) {
+          setIsJoinSuccess(true);
           console.log("회원 가입 성공. 로그인 필요.");
+        } else {
+          setErrortext("모든 항목을 작성해주세요");
         }
       })
       .catch((error) => {
@@ -84,7 +88,7 @@ export default function UserJoinPage({ navigation, route }) {
   ));
 
   // 회원 가입 성공 화면
-  if (isRegistraionSuccess) {
+  if (isJoinSuccess) {
     return (
       <SafeAreaView style={styles.successContainer}>
         <View>
@@ -110,14 +114,19 @@ export default function UserJoinPage({ navigation, route }) {
       </SafeAreaView>
     );
   }
-
+  // 회원가입 기본 화면
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#E1EADE" }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <ScrollView>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}> 사용자 회원가입</Text>
+            <Text style={styles.title}>사용자 회원가입</Text>
+            {errortext !== null ? (
+              <Text style={{ color: "red", fontWeight: "500" }}>
+                {"* " + errortext}
+              </Text>
+            ) : null}
           </View>
 
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -128,6 +137,8 @@ export default function UserJoinPage({ navigation, route }) {
                 <View style={styles.infoContainer}>
                   <TextInput
                     style={styles.info}
+                    placeholder="ID"
+                    keyboardType="ascii-capable"
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userId: text });
                     }}></TextInput>
@@ -135,6 +146,9 @@ export default function UserJoinPage({ navigation, route }) {
                 <View style={styles.infoContainer}>
                   <TextInput
                     style={styles.info}
+                    placeholder="Password"
+                    keyboardType="ascii-capable"
+                    secureTextEntry={true}
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userPw: text });
                     }}></TextInput>
@@ -166,7 +180,7 @@ export default function UserJoinPage({ navigation, route }) {
                   <TextInput
                     style={styles.info}
                     maxLength="11"
-                    keyboardType="numeric"
+                    keyboardType="numbers-and-punctuation"
                     placeholder="1900.01.01"
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userBirth: text });
@@ -175,6 +189,7 @@ export default function UserJoinPage({ navigation, route }) {
                 <View style={styles.infoContainer}>
                   <TextInput
                     style={styles.info}
+                    placeholder="주소"
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userAddr: text });
                     }}></TextInput>
@@ -182,9 +197,9 @@ export default function UserJoinPage({ navigation, route }) {
                 <View style={styles.infoContainer}>
                   <TextInput
                     style={styles.info}
-                    maxLength="11"
-                    keyboardType="numeric"
-                    placeholder="01012345678"
+                    maxLength="13"
+                    keyboardType="numbers-and-punctuation"
+                    placeholder="010-1234-5678"
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userPhone: text });
                     }}></TextInput>
@@ -193,6 +208,7 @@ export default function UserJoinPage({ navigation, route }) {
                 <View style={styles.infoContainer}>
                   <TextInput
                     style={styles.info}
+                    placeholder="질병"
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userDisease: text });
                     }}></TextInput>
@@ -200,6 +216,7 @@ export default function UserJoinPage({ navigation, route }) {
                 <View style={styles.infoContainer}>
                   <TextInput
                     style={styles.info}
+                    placeholder="다니는 병원명"
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userHospital: text });
                     }}></TextInput>
@@ -248,8 +265,9 @@ const styles = StyleSheet.create({
     color: "#385723",
     fontSize: 25,
     fontWeight: "600",
-    marginBottom: 40,
+    marginBottom: 25,
   },
+
   infoContainer: {
     paddingHorizontal: 10,
     height: 45,

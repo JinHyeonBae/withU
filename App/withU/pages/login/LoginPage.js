@@ -20,18 +20,15 @@ export default function LoginPage({ navigation, route }) {
   });
   const [registerState, setRegisterState] = useState({
     message: "",
+    status: 0,
   });
-
-  const [userId, setUserId] = useState("");
-  const [userPw, setUserPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState("");
-
+  const [isJoinSuccess, setIsJoinSuccess] = useState(false);
+  const [errortext, setErrortext] = useState(null);
   const submit = () => {
     console.log("submit");
     //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
     // https 시 network request failed
-    const url = "https://3.36.136.26:4000/login";
+    const url = "http://3.36.136.26:4000/login";
 
     const result = fetch(url, {
       method: "POST",
@@ -45,16 +42,15 @@ export default function LoginPage({ navigation, route }) {
       .then((res) => res.json())
       .then((res) => {
         console.log("서버로부터의 답변 :", res.message);
-        setRegisterState(res.message);
-        if (res.status === "200") {
-          // 로그인 성공
-          //AsyncStorage.setItem('user_id', res.data.stu_id); // 로컬 저장소(이후에 구현 예정)
-          //console.log(res.data.stu_id);
-          navigation.replace({ name: route.params.mode + "Mode" });
-          // navigation.reset({ routes: [{ name: route.params.mode + "Mode" }] });
+        setRegisterState({ ...registerState, message: res.message });
+        setRegisterState({ ...registerState, status: res.status });
+        console.log(registerState);
+        if (res.status === 200) {
+          navigation.reset({
+            routes: [{ name: route.params.mode + "Mode" }],
+          });
         } else {
           setErrortext("아이디와 비밀번호를 다시 확인해주세요");
-          console.log("Please check your id or password");
         }
       })
       .catch((error) => {
@@ -82,20 +78,26 @@ export default function LoginPage({ navigation, route }) {
           setLoginForm({ ...loginForm, userPw: text });
         }}
       />
-      <View>
-        <Text></Text>
-      </View>
+      {/* 오류 메시지 출력 */}
+      {errortext !== null ? (
+        <View style={{ width: "75%", paddingLeft: 10 }}>
+          <Text style={{ color: "red", marginBottom: 5 }}>
+            {"* " + errortext}
+          </Text>
+        </View>
+      ) : null}
+
       <TouchableOpacity
         style={styles.loginButton}
         onPress={() => {
           submit();
-          // navigation.reset({ routes: [{ name: route.params.mode + "Mode" }] });
         }}>
         <Text style={{ color: "#fff", fontSize: 18, fontWeight: "700" }}>
           로그인
         </Text>
       </TouchableOpacity>
 
+      {/*onPress={() => {navigation.navigate('JoinPage')}*/}
       <TouchableOpacity
         style={{ marginTop: 15 }}
         onPress={() => {
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 8,
     paddingHorizontal: 15,
-    width: 280,
+    width: "75%",
     height: 45,
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -134,12 +136,11 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     height: 45,
-    width: 280,
+    width: "75%",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#9CCA7C",
-    //marginTop: 10,
   },
   loginExplanation: {
     color: "#385723",
