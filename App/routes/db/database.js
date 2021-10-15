@@ -21,55 +21,56 @@ function connect() {
   });
 }
 
-
 // login 시 유저 확인용 함수
 function getUser(UserConfig) {
-
-  console.log("UserConfig :", UserConfig)
+  console.log("UserConfig :", UserConfig);
   const { userId, userPw, userType } = UserConfig;
 
   const query = `select * from ${userType} where ${userType}_id = "${userId}" and protector_pwd = "${userPw}"`;
 
-  const promise = new Promise((resolve, reject)=>{ 
+  const promise = new Promise((resolve, reject) => {
     connection.query(query, (error, results, fields) => {
       if (error) console.log(error);
 
       // 결과 없음
-      if(results.length == 0){
-        resolve(0)
-      }
-      else
-        resolve(1)
-      });
-    })
-    return promise
+      if (results.length == 0) {
+        resolve(0);
+      } else resolve(1);
+    });
+  });
+  return promise;
 }
 
-function registerUser(UserConfig){
-
+function registerUser(UserConfig) {
   // 같은 아이디가 있는지의 여부
   // 이건 유저의 정보이고..
-  const { userId, userType, userName, userGender, userBirth, userAddr, userPhone, user_hospital, userDev, UserDis} = UserConfig
-  
-  const query = `select * from ${userType} where ${userType}_id = "${userId}"`
-  const promise = new Promise((resolve, reject)=>{
+  const {
+    userId,
+    userType,
+    userName,
+    userGender,
+    userBirth,
+    userAddr,
+    userPhone,
+    user_hospital,
+    userDev,
+    UserDis,
+  } = UserConfig;
 
+  const query = `select * from ${userType} where ${userType}_id = "${userId}"`;
+  const promise = new Promise((resolve, reject) => {
     connection.query(query, (error, results, fields) => {
       if (error) console.log(error);
-
+      console.log(results);
       // 결과 없음
-      if(results.length == 0){
-        resolve(0)
-      }
-      else
-        resolve(1)
-      });
-  })
+      if (results.length == 0) {
+        resolve(0);
+      } else resolve(1);
+    });
+  });
 }
-
-
 
 module.exports = {
   getUser,
-  registerUser
+  registerUser,
 };
