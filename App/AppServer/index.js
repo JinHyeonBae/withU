@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000;
+const session = require('express-session');
+
 
 const { login   } = require("./routes/register/login.js")
 const { signUp  } = require("./routes/register/signUp.js")
@@ -9,6 +11,13 @@ const { signUp  } = require("./routes/register/signUp.js")
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(session({  // 2
+    secret: 'hanium',  // 암호화
+    resave: false,
+    saveUninitialized: true,
+}));
+
+
 app.get('/', (req, res) => {
     console.log("hihi")
     res.json({
@@ -16,8 +25,23 @@ app.get('/', (req, res) => {
     });
 });
 
-app.post('/login', login)
+
+app.post('/login', (request, response)=>{
+    if(request.session.isLogined == undefined)
+        login(request,response)
+    else{
+        console.log("herere")
+        response.send({message :"사용자가 확인되었습니다", status : 200})
+    }
+})
+
 app.post('/signUp', signUp)
+
+process.once("SIGUSR2", function () {
+    server.close(function () {
+      process.kill(process.pid, "SIGUSR2")
+    })
+})
 
 app.listen(port, () => {
     console.log(`server is listening at ${port}`);

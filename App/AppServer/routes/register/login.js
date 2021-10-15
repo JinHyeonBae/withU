@@ -1,41 +1,39 @@
-
 const { getUser } = require('../db/database.js')
 
-// post 형식으로 오겠지?
 
+function identify(UserConfig){
 
-function login(req, res){
-    console.log("enter")
+    const { userId, userPw } = UserConfig  
+
+    request.session.userId =userId
+    request.session.pwd = userPw
+    request.session.isLogined = true
+    console.log(request.session)
     
-    const UserConfig = req.body
+}
+
+
+function login(request, response){
     
-    // db 커넥팅하고 테이블에서 가져옴.
+
+    const UserConfig = request.body
     
-    getUser(UserConfig)
+    isExist = getUser(UserConfig)
 
-    // const { storedUserId, storedUserPw } = db()
-    // let res;
-
-    // if (storedUserId != userId && storedUserPw != password){
-    //     res = {
-    //         "resText" :  "아이디 혹은 비밀번호가 틀렸습니다.",
-    //         "resNum" : 0
-    //     }     
-    // }
-    // else if (storedUserId != userId || storedUserPw != password){
-    //     res = {
-    //         "resText" :  "아이디 혹은 비밀번호가 틀렸습니다.",
-    //         "resNum" : 0
-    //     }    
-    // }
-    // else{
-    //     res = {
-    //         "resText" :  "아이디 혹은 비밀번호가 틀렸습니다.",
-    //         "resNum" : 1
-    //     }    
-    // }
-
-    // return response.send(res)
+    isExist.then((res)=>{
+        if(res){
+            const { userId, userPw } = UserConfig  
+            request.session.userId =userId
+            request.session.pwd = userPw
+            request.session.isLogined = true
+    
+            console.log(request.session)
+            response.send({message :"사용자가 확인되었습니다", status : 200})
+        }
+        else{
+            response.send({message : "없는 사용자입니다.", status : 404})
+        }
+    })
 }
 
 module.exports ={
