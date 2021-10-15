@@ -1,21 +1,37 @@
-
 const { getUser } = require('../db/database.js')
 
-// post 형식으로 오겠지?
+
+function identify(UserConfig){
+
+    const { userId, userPw } = UserConfig  
+
+    request.session.userId =userId
+    request.session.pwd = userPw
+    request.session.isLogined = true
+    console.log(request.session)
+    
+}
 
 
 function login(request, response){
+    
 
     const UserConfig = request.body
     
     isExist = getUser(UserConfig)
-    
+
     isExist.then((res)=>{
         if(res){
-            response.send({message :"사용자가 확인되었습니다"})
+            const { userId, userPw } = UserConfig  
+            request.session.userId =userId
+            request.session.pwd = userPw
+            request.session.isLogined = true
+    
+            console.log(request.session)
+            response.send({message :"사용자가 확인되었습니다", status : 200})
         }
         else{
-            response.send({message : "없는 사용자입니다."})
+            response.send({message : "없는 사용자입니다.", status : 404})
         }
     })
 }
