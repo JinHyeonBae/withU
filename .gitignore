@@ -1,0 +1,17 @@
+App/withU/node_modules/
+App/node_modules/
+*.vscode
+*package.json
+*package-lock.json
+.expo/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
