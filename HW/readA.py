@@ -6,7 +6,7 @@ import base64
 port = '/dev/ttyACM0'
 brate = 9600 #boudrate
 cmd = 'temp'
-url="http://3.36.136.26:4000/setHouseInfo"
+url="http:/*/setHouseInfo"
 
 seri = serial.Serial(port, baudrate = brate, timeout = None)
 print(seri.name)
