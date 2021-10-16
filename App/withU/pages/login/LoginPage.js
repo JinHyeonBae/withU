@@ -21,38 +21,53 @@ export default function LoginPage({ navigation, route }) {
     userType : route.params.mode
   })
   const [registerState, setRegisterState] = useState({
-    message : ""
+    message : "",
+    status : 0
   })
 
+  const [change, setChange] = useState(0)
 
+  useEffect(()=>{
 
-  const submit = ()=>{
-    console.log("submit")
-    //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
-    // https 시 network request failed
-    const url = 'http://3.36.136.26:4000/login'
-
-    const result = fetch(url,{
-        method : 'POST',
-        body : JSON.stringify(loginForm),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-    })
-    
-    result
-    .then((res)=> res.json())
-    .then((res)=>{
-      console.log("서버로부터의 답변 :", res.message)
-      setRegisterState(res.message)
-    })
-    .catch((error)=>{
-      console.log(error)
-      console.log ( '페치 작업에 문제가 발생했습니다, POST : ' + error.message );
-     throw error;
-    })
-  }
+    const submit = ()=>{
+      console.log("submit")
+      //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
+      // https 시 network request failed
+      const url = 'http://3.36.136.26:4000/login'
   
+      const result = fetch(url,{
+          method : 'POST',
+          body : JSON.stringify(loginForm),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+      })
+      
+      result
+      .then((res)=> res.json())
+      .then((res)=>{
+        console.log("서버로부터의 답변 :", res.message)
+        setRegisterState({...registerState, message : res.message})
+        setRegisterState({...registerState, status : res.status})
+       
+      })
+      .catch((error)=>{
+        console.log(error)
+        console.log ( '페치 작업에 문제가 발생했습니다, POST : ' + error.message );
+       throw error;
+      })
+    }
+    
+    if(change){
+      submit()
+      setChange(0)
+      console.log(registerState)
+    }
+
+  })
+
+ 
+
 
   return (
     <View style={styles.container}>
@@ -70,12 +85,14 @@ export default function LoginPage({ navigation, route }) {
         onChangeText={(text) => {setLoginForm({...loginForm, userPw : text})}}
       />
       <TouchableOpacity style={styles.loginButton} 
-        onPress={() => {  submit();}}>
+        onPress={async () => {  await setChange(1); 
+            console.log("submit after :",registerState)
+            registerState.status == 200 ?  navigation.reset({ routes: [{ name: route.params.mode + "Mode" }]}) : ''}}>
         <Text style={{color: '#fff', fontSize: 18, fontWeight: '700'}}>로그인</Text>
       </TouchableOpacity>
         
       {/*onPress={() => {navigation.navigate('JoinPage')}*/}
-      <TouchableOpacity style={{marginTop: 15}}>
+      <TouchableOpacity style={{marginTop: 15}}  onPress={() => {navigation.navigate({ name: route.params.mode + "JoinPage" })}}>
           <Text style={{color: '#385723', fontSize: 16, fontWeight: '600'}}>회원가입</Text>
       </TouchableOpacity>
     </View>
