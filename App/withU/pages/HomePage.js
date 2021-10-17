@@ -43,15 +43,22 @@ export default function HomePage() {
       fetch(url)
         .then((response) => response.json())
         .then((res) => {
-          setHouseForm({ ...houseForm, house_id: res.house_id });
-          setHouseForm({ ...houseForm, temperature: res.temperature });
-          setHouseForm({ ...houseForm, humidity: res.humidity });
-          setHouseForm({ ...houseForm, risk: res.risk });
-          setHouseForm({ ...houseForm, infrared: res.house_id });
-          setHouseForm({ ...houseForm, user_number: res.user_number });
-          setHouseForm({ ...houseForm, HouseCol: res.HouseCol });
-          console.log(res);
+          console.log(res.houseData);
+          setHouseForm({ ...houseForm, house_id: res.houseData.house_id });
+          setHouseForm({
+            ...houseForm,
+            temperature: res.houseData.temperature,
+          });
+          setHouseForm({ ...houseForm, humidity: res.houseData.humidity });
+          setHouseForm({ ...houseForm, risk: res.houseData.risk });
+          setHouseForm({ ...houseForm, infrared: res.houseData.house_id });
+          setHouseForm({
+            ...houseForm,
+            user_number: res.houseData.user_number,
+          });
+          setHouseForm({ ...houseForm, HouseCol: res.houseData.HouseCol });
         })
+
         .catch((error) => {
           console.error(error);
         });
@@ -59,23 +66,23 @@ export default function HomePage() {
     }, 2000);
   }, []);
 
-  const riskState = "";
-  const riskColor = "";
+  // const riskState = "";
+  // const riskColor = "";
 
-  switch (houseForm.risk) {
-    case 0:
-      riskColor = "#70AD47";
-      riskState = "양호";
-      break;
-    case 1:
-      riskColor = "#ffcc00";
-      riskState = "경고";
-      break;
-    case 2:
-      riskColor = "#ec1c24";
-      riskState = "위험";
-      break;
-  }
+  // switch (houseForm.risk) {
+  //   case 0:
+  //     riskColor = "#70AD47";
+  //     riskState = "양호";
+  //     break;
+  //   case 1:
+  //     riskColor = "#ffcc00";
+  //     riskState = "경고";
+  //     break;
+  //   case 2:
+  //     riskColor = "#ec1c24";
+  //     riskState = "위험";
+  //     break;
+  // }
 
   return isLoading ? (
     <Loading />
@@ -87,7 +94,7 @@ export default function HomePage() {
           percent={100}
           radius={130}
           borderWidth={30}
-          color={riskColor}
+          // color={riskColor}
           bgColor="#fff">
           <Text style={styles.riskText}>사용자 상태</Text>
           <Text style={styles.riskStateText}>{houseForm.risk}</Text>
