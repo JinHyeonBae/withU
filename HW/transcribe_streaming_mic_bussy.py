@@ -27,6 +27,9 @@ Example usage:
 
 # [START speech_transcribe_streaming_mic]
 from __future__ import division
+import pygame
+
+from google.cloud import texttospeech
 
 import re
 import sys
@@ -38,24 +41,14 @@ from six.moves import queue
 
 from socket import *
 
+from signal import signal, SIGPIPE, SIG_DFL
+#Ignore SIG_PIPE and don't throw exceptions on it... (http://docs.python.org/library/signal.html)
+signal(SIGPIPE,SIG_DFL) 
+
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 clientSock = socket(AF_INET, SOCK_STREAM)
-
-
-class socketClient:
-
-    def __init__(self):
-        self.clientSock = socket(AF_INET, SOCK_STREAM)
-        
-    def connect(self):
-        self.clientSock.connect(('', 1129))
-        print('연결 확인 됐습니다.')
-
-    def receive(self):
-        data = self.clientSock.recv(1024)
-        print('받은 데이터 : ', data.decode('utf-8'))
 
 
 class MicrophoneStream(object):
@@ -124,7 +117,37 @@ class MicrophoneStream(object):
                     break
 
             yield b"".join(data)
+            
+def tts(data):
+    client = texttospeech.TextToSpeechClient()
 
+# Set the text input to be synthesized
+    synthesis_input = texttospeech.SynthesisInput(text=str(data, 'utf-8'))
+
+# Build the voice request, select the language code ("en-US") and the ssml
+# voice gender ("neutral")
+    voice = texttospeech.VoiceSelectionParams(
+        language_code="ko-KR", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+    )
+
+# Select the type of audio file you want returned
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3
+    )
+
+# Perform the text-to-speech request on the text input with the selected
+# voice parameters and audio file type
+    response = client.synthesize_speech(
+        input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+
+    # The response's audio_content is binary.
+    with open("robotanswer.mp3", "wb") as out:
+        # Write the response to the output file.
+        out.write(response.audio_content)
+        print('말동무 로봇 버시의 대답이 "robotanswer.mp3"로 저장되었습니다.')
+        
+        
 
 def listen_print_loop(responses):
     """Iterates through server responses and prints them.
@@ -162,17 +185,29 @@ def listen_print_loop(responses):
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
         overwrite_chars = " " * (num_chars_printed - len(transcript))
+        
 
         if not result.is_final:
+            
             sys.stdout.write(transcript + overwrite_chars + "\r")
             sys.stdout.flush()
+        
 
             num_chars_printed = len(transcript)
 
         else:
             print(transcript + overwrite_chars)
+            clientSock.send(transcript.encode('utf-8'))
+            data = clientSock.recv(1024)
+            print('말동무 로봇 버시 : ', data.decode('utf-8'))
+            tts(data)
+            pygame.mixer.pre_init(44100, 16, 2, 4096)
+            pygame.init()
+            print('버시의 음성을 재생합니다.')
+            pygame.mixer.music.load('robotanswer.mp3')
+            pygame.mixer.music.play()
             
-
+            
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
             if re.search(r"\b(exit|quit)\b", transcript, re.I):
@@ -186,10 +221,11 @@ def main():
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = "ko-KR"  # a BCP-47 language tag
+    
+    
 
 
-    csocket = socketClient()
-    csocket.connect()
+    
     
     client = speech.SpeechClient()
     config = speech.RecognitionConfig(
@@ -203,6 +239,10 @@ def main():
     )
 
     with MicrophoneStream(RATE, CHUNK) as stream:
+        
+        clientSock.connect(('14.44.60.129', 1129))
+        print('연결 확인 됐습니다.')
+        
         audio_generator = stream.generator()
         requests = (
             speech.StreamingRecognizeRequest(audio_content=content)
@@ -213,7 +253,9 @@ def main():
 
         # Now, put the transcription responses to use.
     
+        
         listen_print_loop(responses)
+        
         
 
 
