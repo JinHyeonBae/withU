@@ -24,8 +24,8 @@ export default function LoginPage({ navigation, route }) {
     message: "",
     status: 0,
   });
-  const [isJoinSuccess, setIsJoinSuccess] = useState(false);
   const [errortext, setErrortext] = useState(null);
+
   const submit = () => {
     console.log("submit");
     //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
@@ -46,7 +46,7 @@ export default function LoginPage({ navigation, route }) {
         console.log("서버로부터의 답변 :", res.message);
         setRegisterState({ ...registerState, message: res.message });
         setRegisterState({ ...registerState, status: res.status });
-        console.log(registerState);
+
         if (res.status === 200) {
           navigation.reset({
             routes: [{ name: route.params.mode + "Mode" }],
