@@ -23,7 +23,9 @@ export default function EditProtectorInfoPage({ navigation }) {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 15 }}>
+        <TouchableOpacity
+          style={{ marginRight: 15 }}
+          onPress={() => navigation.goBack(null)}>
           <Text style={{ fontSize: 15, fontWeight: "600", color: "#fff" }}>
             저장
           </Text>
@@ -52,10 +54,10 @@ export default function EditProtectorInfoPage({ navigation }) {
   const ProtectorInfo = {
     name: "한이음",
     gender: "여",
-    birth: "2021.1.1",
-    address: "부산광역시 남구 용소로 45 부경대학교",
-    phone: "010-1111-2222",
-    userId: "xxxx",
+    birth: "1990.1.1",
+    address: "부산광역시 남구 용소로 45 부경대학교 대연캠퍼스",
+    phone: "010-3333-4444",
+    userId: "evewa",
     relationship: "자식",
   };
   var birthArray = ProtectorInfo.birth.split(".");

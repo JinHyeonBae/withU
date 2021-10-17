@@ -80,6 +80,7 @@ export default function UserJoinPage({ navigation, route }) {
     "질병",
     "주병원",
   ];
+
   const userDBTitleList = userDBTitle.map((title, index) => (
     <View style={styles.DBTitlecontainer}>
       <Text key={index} style={styles.DBtitle}>
@@ -268,7 +269,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 25,
   },
-
   infoContainer: {
     paddingHorizontal: 10,
     height: 45,

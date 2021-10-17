@@ -8,8 +8,6 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  SafeAreaView,
-  KeyboardAvoidingView,
 } from "react-native";
 
 export default function LoginPage({ navigation, route }) {
@@ -46,7 +44,7 @@ export default function LoginPage({ navigation, route }) {
         console.log("서버로부터의 답변 :", res.message);
         setRegisterState({ ...registerState, message: res.message });
         setRegisterState({ ...registerState, status: res.status });
-
+        console.log(res.status);
         if (res.status === 200) {
           navigation.reset({
             routes: [{ name: route.params.mode + "Mode" }],
@@ -89,7 +87,6 @@ export default function LoginPage({ navigation, route }) {
           </Text>
         </View>
       ) : null}
-
       <TouchableOpacity
         style={styles.loginButton}
         onPress={() => {
@@ -99,8 +96,6 @@ export default function LoginPage({ navigation, route }) {
           로그인
         </Text>
       </TouchableOpacity>
-
-      {/*onPress={() => {navigation.navigate('JoinPage')}*/}
       <TouchableOpacity
         style={{ marginTop: 15 }}
         onPress={() => {

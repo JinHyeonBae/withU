@@ -65,7 +65,7 @@ export default function VoiceMsgList({ content }) {
         rightOpenValue={-80}
         disableRightSwipe={true}
       />
-      {/* <Text>{listData.msgTitle}</Text> */}
+      <Text>{listData.msgTitle}</Text>
     </View>
   );
 }

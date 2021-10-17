@@ -9,80 +9,53 @@ import {
 } from "react-native";
 import ProgressCircle from "react-native-progress-circle";
 import { StatusBar } from "expo-status-bar";
+
 import Loading from "../components/Loding";
 
 export default function HomePage() {
-  const [houseForm, setHouseForm] = useState({
-    house_id: -1, // int
-    temperature: -1,
-    humidity: -1,
-    risk: -1,
-    infrared: -1, // 적외선
-    user_number: "",
-  });
+  const [houseId, setHouseId] = useState("");
+  const [tem, setTem] = useState("");
+  const [hum, setHum] = useState("");
+  const [risk, setRisk] = useState("");
+  const [infra, setInfra] = useState("");
   const [isLoading, setLoading] = useState(true);
 
-  // const getHouseInfo = async () => {
-  //   try {
-  //     const response = await fetch("http://3.36.136.26:4000/getHouseInfo");
-  //     const json = await response.json();
-  //     console.log(json.house_id);
-  //     setHouseForm({ ...houseForm, house_id: json.house_id });
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
-    setTimeout(() => {
-      // getHouseInfo();
-      const url = "http://3.36.136.26:4000/getHouseInfo";
+    const url = "http://3.36.136.26:4000/getHouseInfo";
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((res) => {
-          console.log(res.houseData);
-          setHouseForm({ ...houseForm, house_id: res.houseData.house_id });
-          setHouseForm({
-            ...houseForm,
-            temperature: res.houseData.temperature,
-          });
-          setHouseForm({ ...houseForm, humidity: res.houseData.humidity });
-          setHouseForm({ ...houseForm, risk: res.houseData.risk });
-          setHouseForm({ ...houseForm, infrared: res.houseData.house_id });
-          setHouseForm({
-            ...houseForm,
-            user_number: res.houseData.user_number,
-          });
-          setHouseForm({ ...houseForm, HouseCol: res.houseData.HouseCol });
-        })
-
-        .catch((error) => {
-          console.error(error);
-        });
-      setLoading(false);
-    }, 2000);
+    fetch(url)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res.houseData);
+        setHouseId(res.houseData.house_id);
+        setTem(res.houseData.temperature);
+        setHum(res.houseData.humidity);
+        setRisk(res.houseData.risk);
+        setInfra(res.houseData.infrared);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(setLoading(false));
   }, []);
 
-  // const riskState = "";
-  // const riskColor = "";
+  let riskState = "";
+  let riskColor = "";
 
-  // switch (houseForm.risk) {
-  //   case 0:
-  //     riskColor = "#70AD47";
-  //     riskState = "양호";
-  //     break;
-  //   case 1:
-  //     riskColor = "#ffcc00";
-  //     riskState = "경고";
-  //     break;
-  //   case 2:
-  //     riskColor = "#ec1c24";
-  //     riskState = "위험";
-  //     break;
-  // }
+  switch (risk) {
+    case 0:
+      riskColor = "#70AD47";
+      riskState = "양호";
+      break;
+    case 1:
+      riskColor = "#ffcc00";
+      riskState = "경고";
+      break;
+    case 2:
+      riskColor = "#ec1c24";
+      riskState = "위험";
+      break;
+  }
 
   return isLoading ? (
     <Loading />
@@ -94,10 +67,10 @@ export default function HomePage() {
           percent={100}
           radius={130}
           borderWidth={30}
-          // color={riskColor}
+          color={riskColor}
           bgColor="#fff">
           <Text style={styles.riskText}>사용자 상태</Text>
-          <Text style={styles.riskStateText}>{houseForm.risk}</Text>
+          <Text style={styles.riskStateText}>{riskState}</Text>
         </ProgressCircle>
       </View>
 
@@ -105,20 +78,18 @@ export default function HomePage() {
         <View style>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>온도</Text>
-            <Text style={styles.sensorResult}>
-              {houseForm.temperature + "°C"}{" "}
-            </Text>
+            <Text style={styles.sensorResult}>{tem + "°C"} </Text>
           </View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>습도</Text>
-            <Text style={styles.sensorResult}>{houseForm.humidity + "%"} </Text>
+            <Text style={styles.sensorResult}>{hum + "%"} </Text>
           </View>
         </View>
 
         <View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>활동 감지</Text>
-            <Text style={styles.sensorResult}>{houseForm.infrared} </Text>
+            <Text style={styles.sensorResult}>{infra} </Text>
           </View>
           {/* <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>말동무 사용</Text>

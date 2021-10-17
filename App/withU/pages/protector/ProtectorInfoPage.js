@@ -73,10 +73,10 @@ export default function UserInfoPage({ navigation }) {
   const userInfo = {
     name: "한이음",
     gender: "여",
-    birth: "2021.1.1",
-    address: "부산광역시 남구 용소로 45 부경대학교",
-    phone: "010-1111-2222",
-    userId: "xxxx",
+    birth: "1990.1.1",
+    address: "부산광역시 남구 용소로 45 부경대학교 대연캠퍼스",
+    phone: "010-3333-4444",
+    // userId: "evewa",
     relationship: "자식",
   };
 
@@ -104,9 +104,9 @@ export default function UserInfoPage({ navigation }) {
           <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.phone}</Text>
           </View>
-          <View style={styles.infoContainer}>
+          {/* <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.userId}</Text>
-          </View>
+          </View> */}
           <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.relationship}</Text>
           </View>
