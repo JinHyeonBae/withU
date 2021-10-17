@@ -53,6 +53,7 @@ export default function UserJoinPage({ navigation, route }) {
       .then((res) => res.json())
       .then((res) => {
         console.log("서버로부터의 답변 :", res.message);
+        console.log(res);
         setRegisterState(res.message);
         if (res.status === 200) {
           setIsJoinSuccess(true);

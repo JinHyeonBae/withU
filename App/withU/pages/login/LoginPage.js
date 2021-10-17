@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  SafeAreaView,
+  KeyboardAvoidingView,
 } from "react-native";
 
 export default function LoginPage({ navigation, route }) {
@@ -66,6 +68,7 @@ export default function LoginPage({ navigation, route }) {
       <TextInput
         style={styles.loginContainer}
         placeholder="ID"
+        keyboardType="ascii-capable"
         onChangeText={(text) => {
           setLoginForm({ ...loginForm, userId: text });
         }}
