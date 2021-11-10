@@ -13,7 +13,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { Audio } from "expo-av";
 import { SwipeListView } from "react-native-swipe-list-view";
-import VoiceMsgList from "../../components/VoidcMsgList";
+import VoiceMsgList from "../../components/VoiceMsgList";
 
 // const rowSwipeAnimatedValues = {};
 // Array(5)
@@ -85,6 +85,7 @@ export default function VoiceMsgPage({ navigation }) {
       <View style={styles.listContainer}>
         <ScrollView>
           {voiceMsgData.map((content, i) => {
+            console.log(voiceMsgData);
             return <VoiceMsgList content={content} key={i} />;
           })}
         </ScrollView>

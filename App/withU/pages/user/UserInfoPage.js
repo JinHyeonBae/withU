@@ -77,7 +77,7 @@ export default function UserInfoPage({ navigation }) {
   const userInfo = {
     name: "이브와",
     gender: "여",
-    birth: "2021.1.1",
+    birth: "2021.01.01",
     address: "부산광역시 남구 용소로 45 부경대학교",
     userPhone: "010-1234-1234",
     NOKPhone: "010-1111-2222",

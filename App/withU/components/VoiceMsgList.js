@@ -19,8 +19,9 @@ export default function VoiceMsgList({ content }) {
   const [listData, setListData] = useState(
     Array(listData)
       .fill("")
-      .map((listData, i) => ({ key: `${i}`, title: `${listData.msgTitle}` }))
+      .map((listData, i) => ({ key: `${i}`, title: `${content.msgTitle}` }))
   );
+  console.log(listData);
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();

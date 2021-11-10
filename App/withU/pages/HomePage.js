@@ -89,7 +89,7 @@ export default function HomePage() {
         <View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>활동 감지</Text>
-            <Text style={styles.sensorResult}>{infra} </Text>
+            <Text style={styles.sensorResult}>--</Text>
           </View>
           {/* <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>말동무 사용</Text>
