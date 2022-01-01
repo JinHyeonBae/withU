@@ -6,6 +6,7 @@ const session = require('express-session');
 
 const { login   } = require("./routes/register/login.js")
 const { signUp  } = require("./routes/register/signUp.js")
+const { setHouseInfo, getHouseInfo } = require("./routes/houseInfo.js")
 
 // post 형식으로 보내려면 꼭 필요한 parse 과정
 app.use(express.urlencoded({ extended: true }));
@@ -19,7 +20,7 @@ app.use(session({  // 2
 
 
 app.get('/', (req, res) => {
-    console.log("hihi")
+    console.log("localhost:4000 Get 방식으로 들어옴")
     res.json({
         success: true,
     });
@@ -30,16 +31,26 @@ app.post('/login', (request, response)=>{
     if(request.session.isLogined == undefined)
         login(request,response)
     else{
-        console.log("herere")
+        console.log("세션에 사용자 정보가 있습니다.")
         response.send({message :"사용자가 확인되었습니다", status : 200})
     }
 })
 
 app.post('/signUp', signUp)
+//app.post('/getAddr', getAddr)
+
+app.post('/setHouseInfo', setHouseInfo)
+app.get('/getHouseInfo', getHouseInfo)
 
 process.once("SIGUSR2", function () {
     server.close(function () {
       process.kill(process.pid, "SIGUSR2")
+    })
+})
+
+process.on('SIGTERM', ()=>{
+    server.close(function () {
+        process.kill(process.pid, "SIGTERM")
     })
 })
 

@@ -15,10 +15,11 @@ import torch.nn.functional as F
 import pickle
 import sys
 import traceback
-sys.path.append('/home/jetson/Desktop')
+sys.path.append('/home/jetson/Desktop/')
 
 from Server.service.Decoder import AttnDecoderRNN
 from Server.service.Encoder import EncoderRNN
+from Server.service.Lang import Lang
 
 use_cuda = torch.cuda.is_available()
 
@@ -30,31 +31,6 @@ EOS_token = 1
 UNKNOWN_token = 2
 
 
-
-
-class Lang :
-    def __init__(self, name):
-        self.name = name
-        self.word2index = {}
-        self.index2word = {}
-        self.word2count = {0: "SOS", 1: "EOS", 2:"UNKNOWN"}
-        self.n_words = 3 #count SOS and EOS and UNKWON
-      
-    # tokenizer 말고 차라리 처음처럼 띄어쓰기로 하는 게 더 나은듯
-     # 띄어쓰기로 만든.. tokenizer로 바꾸자
-    def addSentence(self, sentence):
-        for word in sentence.split(' '):
-            self.addWord(word)
-    
-    
-    def addWord(self, word):
-        if word not in self.word2index:
-            self.word2index[word] = self.n_words
-            self.word2count[word] = 1
-            self.index2word[self.n_words] = word
-            self.n_words += 1
-        else:
-            self.word2count[word] += 1
 
 
 class evaluation:
@@ -81,7 +57,6 @@ class evaluation:
     def variableFromSentence(self, lang, sentence):
         indexes = self.indexesFromSentence(lang, sentence)
         indexes.append(EOS_token)
-        print(indexes)
         result = Variable(torch.LongTensor(indexes).view(-1,1))
         if use_cuda:
             return result.cuda()
@@ -114,7 +89,7 @@ class evaluation:
             decoder_attentions[di] = decoder_attention.data
             topv, topi = decoder_output.data.topk(1)
             ni = topi.item()
-            print("ni :", ni)
+       
             if ni == EOS_token:
                 decoded_words.append('<EOS>')
                 break
@@ -131,16 +106,19 @@ class evaluation:
         for i in range(1):
             output_words, attentions = self.evaluate(self.encoder, self.decoder , inp)
             output_sentence = ' '.join(output_words)
-            print('<', output_sentence)
-            print('')
+            output_sentence = output_sentence.replace("<EOS>", "")
+            print("생성된 메시지 :", output_sentence)
+            return output_sentence
 
-# if __name__ == '__main__':
-#     try:
-
-#         inp = "초조해"
-#         eval.evaluated(inp)
+if __name__ == '__main__':
+    try:
+        eval = evaluation()
+        eval.read()
+        inp = "자식이 내 마음을 몰라줘"
+        print(type(inp))
+        eval.evaluated(inp)
         
-#     except Exception as e :
-#         print("e :", e.args)
-#         print("error name:",type(e).__name__)
-#         print(traceback.format_exc())
+    except Exception as e :
+        print("e :", e.args)
+        print("error name:",type(e).__name__)
+        print(traceback.format_exc())

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,10 @@ import {
 } from "react-native";
 import ProgressCircle from "react-native-progress-circle";
 import { StatusBar } from "expo-status-bar";
+import HouseState from './House'
+import ReactLoading from 'react-loading';
+import Loader from "./Loader";
+
 
 export default function HomePage() {
   // 임시 데이터
@@ -18,6 +22,14 @@ export default function HomePage() {
   let activity = "양호";
   let robotUseFrequency = "양호";
   let riskColor = "";
+
+  const [loading, setLoading] = useState(true);
+  const [houseState, setHouseState] = useState({
+    temperature : 0,
+    humidity : 0,
+    infrared : 0,
+    risk : -1
+  })
 
   switch (riskState) {
     case "양호":
@@ -31,6 +43,44 @@ export default function HomePage() {
       break;
   }
 
+  
+
+
+  useEffect(()=>{
+  
+    const submit = () =>{
+
+      console.log("submit")
+      //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
+      // https 시 network request failed
+      const url = 'http://3.36.136.26:4000/getHouseInfo'
+  
+  
+      const result = fetch(url)
+      
+      result
+      .then((res)=> res.json())
+      .then((res)=>{
+        console.log(res)
+        setHouseState({...houseState, temperature : res.houseData.temperature})
+        setHouseState({...houseState, humidity : res.houseData.humidity})
+        setHouseState({...houseState, infrared : res.houseData.infrared})
+        setHouseState({...houseState, risk : res.houseData.risk})
+      })
+      .then(()=>{ setLoading(false); console.log("loading sc")})
+      .catch((error)=>{
+        console.log(error)
+        console.log ( '페치 작업에 문제가 발생했습니다, POST : ' + error.message );
+       throw error;
+      })
+    console.log("useEffect")
+    submit()
+
+  }}, [])
+
+    
+  if(loading) return <Loader type="spin" color="111111" message={"잠시만 기다려주세요"} />
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="black" />
@@ -41,20 +91,17 @@ export default function HomePage() {
           borderWidth={30}
           color={riskColor}
           bgColor="#fff">
-          <Text style={styles.riskText}>사용자 상태</Text>
-          <Text style={styles.riskStateText}>{riskState}</Text>
+          <HouseState textStyle={styles.riskText} dataStyles={styles.riskStateText} innerText={"사용자 상태"} data={houseState.risk}/>
         </ProgressCircle>
       </View>
 
       <View style={styles.sensorContainer}>
         <View style>
           <View style={styles.sensorInfo}>
-            <Text style={styles.sensorTitle}>온도</Text>
-            <Text style={styles.sensorResult}>{temperature + "°C"} </Text>
+          <HouseState textStyle={styles.sensorTitle} dataStyles={styles.sensorResult} innerText={"온도"} data={houseState.temperature + "°C"}/>
           </View>
           <View style={styles.sensorInfo}>
-            <Text style={styles.sensorTitle}>습도</Text>
-            <Text style={styles.sensorResult}>{humidity + "%"} </Text>
+          <HouseState textStyle={styles.sensorTitle} dataStyles={styles.sensorResult} innerText={"습도"} data={houseState.humidity + "%"}/>
           </View>
         </View>
 

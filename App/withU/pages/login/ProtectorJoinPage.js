@@ -62,17 +62,17 @@ export default function ProtectorJoinPage({ navigation, route }) {
                   <TextInput
                     style={styles.innerNumContainer}
                     keyboardType="numeric"
-                    maxLength="4"></TextInput>
+                    maxLength={4}></TextInput>
                   <Text style={styles.info}> . </Text>
                   <TextInput
                     style={styles.innerNumContainer}
                     keyboardType="numeric"
-                    maxLength="2"></TextInput>
+                    maxLength={2}></TextInput>
                   <Text style={styles.info}> . </Text>
                   <TextInput
                     style={styles.innerNumContainer}
                     keyboardType="numeric"
-                    maxLength="2"></TextInput>
+                    maxLength={2}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
                   <TextInput style={styles.info}></TextInput>
@@ -81,17 +81,17 @@ export default function ProtectorJoinPage({ navigation, route }) {
                   <TextInput
                     style={styles.innerNumContainer}
                     keyboardType="numeric"
-                    maxLength="3"></TextInput>
+                    maxLength={3}></TextInput>
                   <Text style={styles.info}> - </Text>
                   <TextInput
                     style={styles.innerNumContainer}
                     keyboardType="numeric"
-                    maxLength="4"></TextInput>
+                    maxLength={4}></TextInput>
                   <Text style={styles.info}> - </Text>
                   <TextInput
                     style={styles.innerNumContainer}
                     keyboardType="numeric"
-                    maxLength="4"></TextInput>
+                    maxLength={4}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
                   <TextInput style={styles.info}></TextInput>

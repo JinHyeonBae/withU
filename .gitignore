@@ -1,0 +1,13 @@
+.venv
+*/.venv
+.vscode
+App/.expo
+*/node_modules
+App/node_module
+App/withU/node_module
+Server/sv
+*/__pycache__
+*/*/__pycache__
+App/withU/node_modules
+App/AppServer/node_modules
+App/AppServer/.vscode

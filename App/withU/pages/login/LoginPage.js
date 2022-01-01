@@ -34,7 +34,8 @@ export default function LoginPage({ navigation, route }) {
       //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
       // https 시 network request failed
       const url = 'http://3.36.136.26:4000/login'
-  
+
+
       const result = fetch(url,{
           method : 'POST',
           body : JSON.stringify(loginForm),
@@ -49,14 +50,14 @@ export default function LoginPage({ navigation, route }) {
         console.log("서버로부터의 답변 :", res.message)
         setRegisterState({...registerState, message : res.message})
         setRegisterState({...registerState, status : res.status})
-       
       })
       .catch((error)=>{
         console.log(error)
         console.log ( '페치 작업에 문제가 발생했습니다, POST : ' + error.message );
        throw error;
-      })
+     })
     }
+
     
     if(change){
       submit()
@@ -66,13 +67,10 @@ export default function LoginPage({ navigation, route }) {
 
   })
 
- 
-
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title} 로그인</Text>
-      <TextInput style={styles.loginContainer} placeholder="ID" />
       <TextInput
         style={styles.loginContainer}
         placeholder="ID"

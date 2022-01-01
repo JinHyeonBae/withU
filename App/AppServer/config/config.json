@@ -1,0 +1,15 @@
+{
+    "host": "withdb.cyx4oipm4ian.ap-northeast-2.rds.amazonaws.com",
+    "username": "ubuntu",
+    "password": "gksdldma21!",
+    "database" : "withdb",
+    "dialect": "mysql",
+    "port": "3306",
+    "logging": true,
+    "maxConcurrentQueries": 100,
+    "dialectOptions": {
+      "ssl": "Amazon RDS"
+    },
+    
+    "address" : "withdb.cyx4oipm4ian.ap-northeast-2.rds.amazonaws.com"
+}

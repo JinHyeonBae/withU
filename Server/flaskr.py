@@ -33,6 +33,7 @@ if __name__ == '__main__' :
     serverSocket.accept()
 
     deadline = time.time() + 20.0
+    result = ""
 
     while True:
         try:   
@@ -40,22 +41,25 @@ if __name__ == '__main__' :
 
             # user 발화
             sentence = serverSocket.get()
-            print("user:", sentence)
 
-            if sentence in ["살려줘", "사람 살려", "살려"] :
+            if sentence.find("살려줘") != -1 :
                 controlObject.notify()
 
-            controlObject.set(sentence)   
-            controlObject.update()
+            if sentence.find("안녕") != -1 :
+                result = "안녕하세요 저는 말동무 로봇 버시에요. 앞으로 말동무가 되어드릴게요"
 
-            while controlObject.get() == "":
-                time.sleep(1)
+            else:
+                controlObject.set(sentence)   
+                controlObject.update()
 
-            result = controlObject.get()
-            print("받은 메시지 :", result)
+                while controlObject.get() == "":
+                    time.sleep(1)
+
+                result = controlObject.get()
+        
             serverSocket.set(result)
             serverSocket.send()
-
+        
         except Exception as e:
             print("Error!")
             print(traceback.format_exc())

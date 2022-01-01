@@ -10,7 +10,8 @@ function signUp(request, response){
     sign = registerUser(UserConfig)
 
     sign.then((res)=>{
-        if(!sign)
+        console.log("0이면 성공, 1이면 실패 : ",res)
+        if(res)
             response.send({message: "회원가입 완료", status : 200 })
         else
             response.send({message : "이미 있는 아이디입니다.", status : 500})

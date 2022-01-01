@@ -9,6 +9,8 @@ import LoginPage from "./pages/login/LoginPage";
 import UserJoinPage from "./pages/login/UserJoinPage";
 import ProtectorJoinPage from "./pages/login/ProtectorJoinPage";
 
+//import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';//
+
 const Login = createStackNavigator();
 
 export default function App() {

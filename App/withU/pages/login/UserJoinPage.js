@@ -11,12 +11,63 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export default function UserJoinPage({ navigation, route }) {
+  // text input
+  const [userJoinForm, setUserJoinForm] = useState({
+    userId: "",
+    userPw: "",
+    userName: "",
+    userGender: "",
+    userBirth: "",
+    userAddr: "",
+    userPhone: "",
+    userDis: "",
+    userHospital: "",
+    userType: "User",
+  });
+
+  const [registerState, setRegisterState] = useState({
+    message: "",
+  });
+  const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false); // 회원 가입 성공 여부
+
+  const submit = () => {
+    console.log("submit");
+    //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
+    // https 시 network request failed
+    const url = "http://3.36.136.26:4000/signUp";
+
+    const result = fetch(url, {
+      method: "POST",
+      body: JSON.stringify(userJoinForm),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    result
+      .then((res) => res.json())
+      .then((res) => {
+        
+        console.log("서버로부터의 답변 :", res.message);
+        setRegisterState(res.message);
+        if (res.status === 200) {
+          setIsRegistraionSuccess(true);
+          console.log("회원 가입 성공. 로그인 필요.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log("페치 작업에 문제가 발생했습니다, POST : " + error.message);
+        throw error;
+      });
+  };
+
   const userDBTitle = [
     "아이디",
     "비밀번호",
-    "비밀번호\n확인",
     "이름",
     "성별",
     "생년월일",
@@ -25,7 +76,6 @@ export default function UserJoinPage({ navigation, route }) {
     "질병",
     "주병원",
   ];
-
   const userDBTitleList = userDBTitle.map((title, index) => (
     <View style={styles.DBTitlecontainer}>
       <Text key={index} style={styles.DBtitle}>
@@ -33,6 +83,34 @@ export default function UserJoinPage({ navigation, route }) {
       </Text>
     </View>
   ));
+
+  // 회원 가입 성공 화면
+  if (isRegistraionSuccess) {
+    return (
+      <SafeAreaView style={styles.successContainer}>
+        <View>
+          <Icon
+            name="checkmark-circle-outline"
+            style={styles.successIcon}></Icon>
+        </View>
+        <View>
+          <Text style={{ color: "#385723", fontSize: 20, fontWeight: "500" }}>
+            회원가입이 완료되었습니다
+          </Text>
+        </View>
+        <View style={{ width: "100%", alignItems: "center", marginTop: 40 }}>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => {
+              submit();
+              navigation.goBack(null);
+            }}>
+            <Text style={styles.loginButtonText}>로그인하기</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#E1EADE" }}>
@@ -49,67 +127,94 @@ export default function UserJoinPage({ navigation, route }) {
               <View style={{ flex: 3 }}>
                 {/* input data ->*/}
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info} name="user_id"></TextInput>
-                </View>
-                <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
-                </View>
-                <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
-                </View>
-                <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
-                </View>
-                <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
-                </View>
-                <View style={styles.numContainer}>
                   <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength="4"></TextInput>
-                  <Text style={styles.info}> . </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength="2"></TextInput>
-                  <Text style={styles.info}> . </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength="2"></TextInput>
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userId: text });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userPw: text });
+                    }}></TextInput>
                 </View>
-                <View style={styles.numContainer}>
+                {/* <View style={styles.infoContainer}>
                   <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength="3"></TextInput>
-                  <Text style={styles.info}> - </Text>
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userPwd2: text });
+                    }}></TextInput>
+                </View> */}
+                <View style={styles.infoContainer}>
                   <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength="3"></TextInput>
-                  <Text style={styles.info}> - </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength="3"></TextInput>
+                    style={styles.info}
+                    placeholder="홍길동"
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userName: text });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    placeholder="남 / 여"
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userGender: text });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    maxLength={11}
+                    keyboardType="numeric"
+                    placeholder="1900.01.01"
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userBirth: text });
+                    }}></TextInput>
+                </View>
+                <View style={styles.infoContainer}>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userAddr: text });
+                    }}></TextInput>
+                </View>
+                <View style={styles.infoContainer}>
+                  <TextInput
+                    style={styles.info}
+                    maxLength={11}
+                    keyboardType="numeric"
+                    placeholder="01012345678"
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userPhone: text });
+                    }}></TextInput>
+                </View>
+
+                <View style={styles.infoContainer}>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userDisease: text });
+                    }}></TextInput>
+                </View>
+                <View style={styles.infoContainer}>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setUserJoinForm({ ...userJoinForm, userHospital: text });
+                    }}></TextInput>
                 </View>
               </View>
             </View>
           </TouchableWithoutFeedback>
           <View style={{ height: 100, alignItems: "center" }}>
-            <TouchableOpacity style={styles.joinButton}>
-              <Text style={styles.joinButtonText}>가입</Text>
+            <TouchableOpacity
+              style={styles.joinButton}
+              onPress={() => {
+                submit();
+              }}>
+              <Text style={styles.joinButtonText}>가입하기</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -121,8 +226,8 @@ export default function UserJoinPage({ navigation, route }) {
 const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
-    paddingTop: 45,
-    paddingBottom: 5,
+    paddingTop: 50,
+    paddingBottom: 20,
   },
   DBTitlecontainer: {
     height: 45,
@@ -188,8 +293,32 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   joinButtonText: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#385723",
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#fff",
+  },
+
+  successContainer: {
+    flex: 1,
+    backgroundColor: "#E1EADE",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  successIcon: {
+    fontSize: 130,
+    color: "#548235",
+  },
+  loginButton: {
+    width: "80%",
+    height: 50,
+    backgroundColor: "#548235",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loginButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "500",
   },
 });
