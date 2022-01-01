@@ -79,7 +79,6 @@ export default function LoginPage({ navigation, route }) {
           setLoginForm({ ...loginForm, userPw: text });
         }}
       />
-    <Text style={{color: '#385723', fontSize: 16, fontWeight: '600'}}>회원가입</Text>
       {/* 오류 메시지 출력 */}
       {errortext !== null ? (
         <View style={{ width: "75%", paddingLeft: 10 }}>

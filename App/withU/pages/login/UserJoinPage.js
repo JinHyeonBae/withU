@@ -32,6 +32,7 @@ export default function UserJoinPage({ navigation, route }) {
     message: "",
   });
   const [isJoinSuccess, setIsJoinSuccess] = useState(false); // 회원 가입 성공 여부
+
   // 로그인 오류 메시지 출력
   const [errortext, setErrortext] = useState(null);
   const submit = () => {
@@ -51,7 +52,6 @@ export default function UserJoinPage({ navigation, route }) {
     result
       .then((res) => res.json())
       .then((res) => {
-
         console.log("서버로부터의 답변 :", res.message);
         console.log(res);
         setRegisterState(res.message);
@@ -80,6 +80,7 @@ export default function UserJoinPage({ navigation, route }) {
     "질병",
     "주병원",
   ];
+
   const userDBTitleList = userDBTitle.map((title, index) => (
     <View style={styles.DBTitlecontainer}>
       <Text key={index} style={styles.DBtitle}>
@@ -89,7 +90,6 @@ export default function UserJoinPage({ navigation, route }) {
   ));
 
   // 회원 가입 성공 화면
-
   if (isJoinSuccess) {
     return (
       <SafeAreaView style={styles.successContainer}>
@@ -116,7 +116,6 @@ export default function UserJoinPage({ navigation, route }) {
       </SafeAreaView>
     );
   }
-
   // 회원가입 기본 화면
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#E1EADE" }}>
@@ -152,7 +151,6 @@ export default function UserJoinPage({ navigation, route }) {
                     placeholder="Password"
                     keyboardType="ascii-capable"
                     secureTextEntry={true}
-
                     onChangeText={(text) => {
                       setUserJoinForm({ ...userJoinForm, userPw: text });
                     }}></TextInput>

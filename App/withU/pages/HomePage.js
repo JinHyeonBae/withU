@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,10 +9,6 @@ import {
 } from "react-native";
 import ProgressCircle from "react-native-progress-circle";
 import { StatusBar } from "expo-status-bar";
-import HouseState from './House'
-import ReactLoading from 'react-loading';
-import Loader from "./Loader";
-
 
 import Loading from "../components/Loding";
 
@@ -46,7 +42,6 @@ export default function HomePage() {
   let riskState = "";
   let riskColor = "";
 
-
   switch (risk) {
     case 0:
       riskColor = "#70AD47";
@@ -62,7 +57,6 @@ export default function HomePage() {
       break;
   }
 
-
   return isLoading ? (
     <Loading />
   ) : (
@@ -75,7 +69,8 @@ export default function HomePage() {
           borderWidth={30}
           color={riskColor}
           bgColor="#fff">
-          <HouseState textStyle={styles.riskText} dataStyles={styles.riskStateText} innerText={"사용자 상태"} data={houseState.risk}/>
+          <Text style={styles.riskText}>사용자 상태</Text>
+          <Text style={styles.riskStateText}>{riskState}</Text>
         </ProgressCircle>
       </View>
 
