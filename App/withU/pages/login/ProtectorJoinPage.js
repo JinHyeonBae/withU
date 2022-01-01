@@ -13,10 +13,51 @@ import {
 } from "react-native";
 
 export default function ProtectorJoinPage({ navigation, route }) {
+  // text input
+  const [protectorJoinForm, setProtectorJoinForm] = useState({
+    protectorId: "",
+    protectorPw: "",
+    protectorName: "",
+    protectorBirth: "",
+    protectorAddr: "",
+    protectorPhone: "",
+    relationShip: "",
+    userType: "Protector",
+  });
+
+  const [registerState, setRegisterState] = useState({
+    message: "",
+  });
+
+  const submit = () => {
+    console.log("submit");
+    //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
+    // https 시 network request failed
+    const url = "http://3.36.136.26:4000/signUp";
+
+    const result = fetch(url, {
+      method: "POST",
+      body: JSON.stringify(protectorJoinForm),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    result
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("서버로부터의 답변 :", res.message);
+        setRegisterState(res.message);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log("페치 작업에 문제가 발생했습니다, POST : " + error.message);
+        throw error;
+      });
+  };
   const protectorDBTitle = [
     "아이디",
     "비밀번호",
-    "비밀번호\n확인",
     "이름",
     "생년월일",
     "주소",
@@ -47,60 +88,99 @@ export default function ProtectorJoinPage({ navigation, route }) {
               <View style={{ flex: 3 }}>
                 {/* input data ->*/}
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        protectorId: text,
+                      });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        protectorPw: text,
+                      });
+                    }}></TextInput>
+                </View>
+                {/* <View style={styles.infoContainer}>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({ ...protectorJoinForm, protectorPwd2: text });
+                    }}></TextInput>
+                </View> */}
+                <View style={styles.infoContainer}>
+                  <TextInput
+                    style={styles.info}
+                    placeholder="홍길동"
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        protectorName: text,
+                      });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    maxLength="11"
+                    keyboardType="numeric"
+                    placeholder="1900.01.01"
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        protectorBirth: text,
+                      });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
-                </View>
-                <View style={styles.numContainer}>
                   <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength={4}></TextInput>
-                  <Text style={styles.info}> . </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength={2}></TextInput>
-                  <Text style={styles.info}> . </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength={2}></TextInput>
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        protectorAddr: text,
+                      });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
-                </View>
-                <View style={styles.numContainer}>
                   <TextInput
-                    style={styles.innerNumContainer}
+                    style={styles.info}
+                    maxLength="11"
                     keyboardType="numeric"
-                    maxLength={3}></TextInput>
-                  <Text style={styles.info}> - </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength={4}></TextInput>
-                  <Text style={styles.info}> - </Text>
-                  <TextInput
-                    style={styles.innerNumContainer}
-                    keyboardType="numeric"
-                    maxLength={4}></TextInput>
+                    placeholder="01012345678"
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        protectorPhone: text,
+                      });
+                    }}></TextInput>
                 </View>
                 <View style={styles.infoContainer}>
-                  <TextInput style={styles.info}></TextInput>
+                  <TextInput
+                    style={styles.info}
+                    onChangeText={(text) => {
+                      setProtectorJoinForm({
+                        ...protectorJoinForm,
+                        relationShip: text,
+                      });
+                    }}></TextInput>
                 </View>
               </View>
             </View>
           </TouchableWithoutFeedback>
           <View style={{ height: 100, alignItems: "center" }}>
-            <TouchableOpacity style={styles.joinButton}>
+            <TouchableOpacity
+              style={styles.joinButton}
+              onPress={() => {
+                submit();
+                navigation.goBack(null);
+              }}>
               <Text style={styles.joinButtonText}>가입</Text>
             </TouchableOpacity>
           </View>

@@ -64,7 +64,7 @@ export default function UserInfoPage({ navigation }) {
     "보호자 번호",
     "기저질환",
     "주 병원",
-    "연결된 기기",
+    // "연결된 기기",
   ];
   const infoTitleList = infoTitle.map((title, index) => (
     <View style={styles.titleContainer}>
@@ -77,13 +77,13 @@ export default function UserInfoPage({ navigation }) {
   const userInfo = {
     name: "이브와",
     gender: "여",
-    birth: "2021.1.1",
+    birth: "2021.01.01",
     address: "부산광역시 남구 용소로 45 부경대학교",
     userPhone: "010-1234-1234",
-    NOKPhone: "010-5678-5678",
+    NOKPhone: "010-1111-2222",
     disease: ["당뇨 ", "고혈압 ", "위염 "],
     hospital: "부산대학병원",
-    device: "연결 기기 없음",
+    // device: "연결 기기 없음",
   };
 
   return (
@@ -119,9 +119,9 @@ export default function UserInfoPage({ navigation }) {
           <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.hospital}</Text>
           </View>
-          <View style={styles.infoContainer}>
+          {/* <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.device}</Text>
-          </View>
+          </View> */}
         </View>
       </View>
     </ScrollView>

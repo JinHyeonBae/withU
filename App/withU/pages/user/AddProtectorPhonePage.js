@@ -25,7 +25,9 @@ export default function AddProtectorPhonePage({ navigation }) {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 15 }}>
+        <TouchableOpacity
+          style={{ marginRight: 15 }}
+          onPress={() => navigation.goBack(null)}>
           <Text style={{ fontSize: 15, fontWeight: "600", color: "#fff" }}>
             저장
           </Text>

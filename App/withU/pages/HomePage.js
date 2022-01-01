@@ -14,74 +14,58 @@ import ReactLoading from 'react-loading';
 import Loader from "./Loader";
 
 
+import Loading from "../components/Loding";
+
 export default function HomePage() {
-  // 임시 데이터
-  let riskState = "경고"; // 0: 양호, 1: 경고, 2: 위험
-  let temperature = 25;
-  let humidity = 10;
-  let activity = "양호";
-  let robotUseFrequency = "양호";
+  const [houseId, setHouseId] = useState("");
+  const [tem, setTem] = useState("");
+  const [hum, setHum] = useState("");
+  const [risk, setRisk] = useState("");
+  const [infra, setInfra] = useState("");
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const url = "http://3.36.136.26:4000/getHouseInfo";
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res.houseData);
+        setHouseId(res.houseData.house_id);
+        setTem(res.houseData.temperature);
+        setHum(res.houseData.humidity);
+        setRisk(res.houseData.risk);
+        setInfra(res.houseData.infrared);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(setLoading(false));
+  }, []);
+
+  let riskState = "";
   let riskColor = "";
 
-  const [loading, setLoading] = useState(true);
-  const [houseState, setHouseState] = useState({
-    temperature : 0,
-    humidity : 0,
-    infrared : 0,
-    risk : -1
-  })
 
-  switch (riskState) {
-    case "양호":
+  switch (risk) {
+    case 0:
       riskColor = "#70AD47";
+      riskState = "양호";
       break;
-    case "경고":
+    case 1:
       riskColor = "#ffcc00";
+      riskState = "경고";
       break;
-    case "위험":
+    case 2:
       riskColor = "#ec1c24";
+      riskState = "위험";
       break;
   }
 
-  
 
-
-  useEffect(()=>{
-  
-    const submit = () =>{
-
-      console.log("submit")
-      //localhost로 접속 시 network failed가 일어나서 ngrok으로 임시 설정
-      // https 시 network request failed
-      const url = 'http://3.36.136.26:4000/getHouseInfo'
-  
-  
-      const result = fetch(url)
-      
-      result
-      .then((res)=> res.json())
-      .then((res)=>{
-        console.log(res)
-        setHouseState({...houseState, temperature : res.houseData.temperature})
-        setHouseState({...houseState, humidity : res.houseData.humidity})
-        setHouseState({...houseState, infrared : res.houseData.infrared})
-        setHouseState({...houseState, risk : res.houseData.risk})
-      })
-      .then(()=>{ setLoading(false); console.log("loading sc")})
-      .catch((error)=>{
-        console.log(error)
-        console.log ( '페치 작업에 문제가 발생했습니다, POST : ' + error.message );
-       throw error;
-      })
-    console.log("useEffect")
-    submit()
-
-  }}, [])
-
-    
-  if(loading) return <Loader type="spin" color="111111" message={"잠시만 기다려주세요"} />
-
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <ScrollView style={styles.container}>
       <StatusBar style="black" />
       <View style={styles.riskContainer}>
@@ -98,22 +82,24 @@ export default function HomePage() {
       <View style={styles.sensorContainer}>
         <View style>
           <View style={styles.sensorInfo}>
-          <HouseState textStyle={styles.sensorTitle} dataStyles={styles.sensorResult} innerText={"온도"} data={houseState.temperature + "°C"}/>
+            <Text style={styles.sensorTitle}>온도</Text>
+            <Text style={styles.sensorResult}>{tem + "°C"} </Text>
           </View>
           <View style={styles.sensorInfo}>
-          <HouseState textStyle={styles.sensorTitle} dataStyles={styles.sensorResult} innerText={"습도"} data={houseState.humidity + "%"}/>
+            <Text style={styles.sensorTitle}>습도</Text>
+            <Text style={styles.sensorResult}>{hum + "%"} </Text>
           </View>
         </View>
 
         <View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>활동 감지</Text>
-            <Text style={styles.sensorResult}>{activity} </Text>
+            <Text style={styles.sensorResult}>--</Text>
           </View>
-          <View style={styles.sensorInfo}>
+          {/* <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>말동무 사용</Text>
-            <Text style={styles.sensorResult}>{robotUseFrequency} </Text>
-          </View>
+            <Text style={styles.sensorResult}>{houseForm.} </Text>
+          </View> */}
         </View>
       </View>
     </ScrollView>

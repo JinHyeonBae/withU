@@ -59,7 +59,7 @@ export default function UserInfoPage({ navigation }) {
     "생년월일",
     "거주지",
     "전화번호",
-    "사용자ID",
+    // "사용자ID",
     "사용자와의\n관계",
   ];
   const infoTitleList = infoTitle.map((title, index) => (
@@ -73,10 +73,10 @@ export default function UserInfoPage({ navigation }) {
   const userInfo = {
     name: "한이음",
     gender: "여",
-    birth: "2021.1.1",
+    birth: "1990.01.01",
     address: "부산광역시 남구 용소로 45 부경대학교",
-    phone: "010-1111-2222",
-    userId: "xxxx",
+    phone: "010-3333-4444",
+    // userId: "evewa",
     relationship: "자식",
   };
 
@@ -104,9 +104,9 @@ export default function UserInfoPage({ navigation }) {
           <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.phone}</Text>
           </View>
-          <View style={styles.infoContainer}>
+          {/* <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.userId}</Text>
-          </View>
+          </View> */}
           <View style={styles.infoContainer}>
             <Text style={styles.info}>{userInfo.relationship}</Text>
           </View>
