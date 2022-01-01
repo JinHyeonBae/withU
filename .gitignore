@@ -11,3 +11,5 @@ Server/sv
 App/withU/node_modules
 App/AppServer/node_modules
 App/AppServer/.vscode
+App/withU/yarn.lock
+App/yarn.lock
