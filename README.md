@@ -25,6 +25,6 @@
   
 
 ## 구조도
-![image](https://user-images.githubusercontent.com/47708313/147879044-99c7e0f2-b568-4c9a-84b5-422776b15d78.png)
-![image](https://user-images.githubusercontent.com/47708313/147879055-f29e1f47-47f0-4a5a-a310-574653b27814.png)
-![image](https://user-images.githubusercontent.com/47708313/147879073-877b325c-54cf-42f3-a760-122e29e75542.png)
+<img width="552" alt="한이음 구조0" src="https://user-images.githubusercontent.com/47708313/166243359-4fd04991-3e67-4a38-b494-977f02374c29.png">
+<img width="604" alt="한이음 구조도1" src="https://user-images.githubusercontent.com/47708313/166243376-51c0f641-60f0-44f0-8fce-6dc8842f43a0.png">
+<img width="445" alt="한이음 구조도2" src="https://user-images.githubusercontent.com/47708313/166243386-e451f138-95e6-43af-8f06-dee2b01e4974.png">
