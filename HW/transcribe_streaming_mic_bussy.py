@@ -240,7 +240,7 @@ def main():
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         
-        clientSock.connect(('14.44.60.129', 1129))
+        clientSock.connect(('', )) #ip, port
         print('연결 확인 됐습니다.')
         
         audio_generator = stream.generator()
